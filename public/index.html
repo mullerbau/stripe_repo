@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso VIP - Landing Page</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Área VIP Exclusiva</h1>
+            <p>Acesse conteúdo premium por apenas R$ 1,00</p>
+        </header>
+
+        <main>
+            <div class="benefits">
+                <h2>O que você vai ter acesso:</h2>
+                <ul>
+                    <li>✅ Vídeo exclusivo no YouTube</li>
+                    <li>✅ Conteúdo premium</li>
+                    <li>✅ Acesso imediato após pagamento</li>
+                </ul>
+            </div>
+
+            <div class="pricing">
+                <div class="price-card">
+                    <h3>Acesso VIP</h3>
+                    <div class="price">R$ 1,00</div>
+                    <button id="checkout-button">
+                        🔒 Pagar e Acessar Agora
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Pagamento seguro processado pelo Stripe</p>
+        </footer>
+    </div>
+
+    <script>
+        const stripe = Stripe('pk_test_sua_chave_publica_aqui'); // Substitua pela sua chave pública
+
+        document.getElementById('checkout-button').addEventListener('click', async () => {
+            const button = document.getElementById('checkout-button');
+            button.disabled = true;
+            button.textContent = 'Processando...';
+
+            try {
+                const response = await fetch('/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const session = await response.json();
+
+                const result = await stripe.redirectToCheckout({
+                    sessionId: session.id,
+                });
+
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao processar pagamento');
+            } finally {
+                button.disabled = false;
+                button.textContent = '🔒 Pagar e Acessar Agora';
+            }
+        });
+    </script>
+</body>
+</html>

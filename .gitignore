@@ -1,0 +1,17 @@
+# Dependências
+node_modules/
+npm-debug.log*
+
+# Variáveis de ambiente (NUNCA commitar)
+.env
+
+# Logs
+*.log
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
